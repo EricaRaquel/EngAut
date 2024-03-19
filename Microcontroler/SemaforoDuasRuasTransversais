@@ -1,0 +1,98 @@
+ /* L Ó G I C A   D E   S E M Á F O R O S
+ 
+      Utilizando uma metodologia sistemática foi projetado um circuito sequencial síncrono 
+      para acionamento de dois semáforos em duas ruas transversais.    
+      A operação lógica utilizada é um EXOR.
+ 
+      ////////////////////////////////////////////////////////
+      // Autora do código: Érica Raquel                     //
+      // Curso: Eng. de Controle e Automação                //
+      // Instituto Federal do Ceará - Campus Maracanaú      //
+      ////////////////////////////////////////////////////////
+ */ 
+ #define Botao_1 pin_b1
+ #define Botao_2 pin_b2
+ #include <18F4550.h>
+ #fuses HSPLL,CPUDIV3,PLL1,USBDIV //Configuração dos fusíveis que linearizam a frequência do oscilador externo
+ #use delay(clock=24000000)//Clock de 24MHz
+
+  
+ void main()
+ {
+ while(true)
+    {
+     Port_b_pullups(true); //Habilita resistor pull-up dos pinos da porta b
+         
+      if(((input(Botao_1)==0) && (input(Botao_2)==1)) || ((input(Botao_1)==1) && (input(Botao_2)==0))) //Lógica EXOR
+       { 
+       goto LigaSemaforo;
+       }
+       else
+       {
+       goto DesligaSemaforo;
+       } 
+       
+       /////////////////////////////////
+       /// Label que liga o semáforo ///
+       /////////////////////////////////
+       
+       
+       LigaSemaforo:    
+       //Estágio 1
+       //Liga Verde Rua 1 e Vermelho Rua 2
+        Output_D(0x22); //Aciona o pino d1 
+        delay_ms(7000);
+        if(((input(Botao_1)==0) && (input(Botao_2)==0)) || ((input(Botao_1)==1) && (input(Botao_2)==1))) /*Verifica a cada acionamento o status dos dois botões*/
+        {
+        Output_D(0x00);
+        break;
+        }  
+        
+        //Estágio 2
+       //Liga Amarelo Rua 1 e Vermelho Rua 2
+        Output_D(0x21); //Aciona o pino d0
+        delay_ms(1000);
+        if(((input(Botao_1)==0) && (input(Botao_2)==0)) || ((input(Botao_1)==1) && (input(Botao_2)==1)))/*Verifica a cada acionamento o status dos dois botões*/
+        {
+        Output_D(0x00);
+        break;
+        } 
+        
+        //Estágio 3
+       //Liga Vermelho Rua 1 e Verde Rua 2       
+        Output_D(0xC); //Aciona o pino d2
+         delay_ms(7000);
+        if(((input(Botao_1)==0) && (input(Botao_2)==0)) || ((input(Botao_1)==1) && (input(Botao_2)==1)))/*Verifica a cada acionamento o status dos dois botões*/
+        { 
+        Output_D(0x00);
+        break;
+        }
+       
+        //Estágio 4
+       //Liga Vermelho Rua 1 e Amarelo Rua 2       
+        Output_D(0x14); //Aciona o pino d2
+        delay_ms(1000);
+        if(((input(Botao_1)==0) && (input(Botao_2)==0)) || ((input(Botao_1)==1) && (input(Botao_2)==1)))/*Verifica a cada acionamento o status dos dois botões*/
+        {
+        Output_D(0x00);
+        break;
+        }
+        
+ 
+       ////////////////////////////////////
+       /// Label que desliga o semáforo ///
+       ////////////////////////////////////
+       
+        DesligaSemaforo:
+        Output_D(0x00);
+       
+        }
+       
+      
+     }
+ 
+ 
+ 
+ 
+ 
+ 
