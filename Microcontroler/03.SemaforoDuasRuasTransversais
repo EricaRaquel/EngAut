@@ -6,8 +6,8 @@
  
       ////////////////////////////////////////////////////////
       // Autora do código: Érica Raquel                     //
-      // Curso: Eng. de Controle e Automação                //
-      // Instituto Federal do Ceará - Campus Maracanaú      //
+      //                                                    //
+      //                                                    //
       ////////////////////////////////////////////////////////
  */ 
  #define Botao_1 pin_b1
